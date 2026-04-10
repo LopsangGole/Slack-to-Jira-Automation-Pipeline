@@ -14,6 +14,7 @@ Impact
 
 Project Structure
 /project-root
+
 │
 ├── workflow.json       # Exported n8n workflow
 ├── screenshots/        # Slack, n8n, Jira images
