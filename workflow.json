@@ -1,0 +1,160 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "project": {
+          "__rl": true,
+          "value": "10000",
+          "mode": "list",
+          "cachedResultName": "My Scrum Space"
+        },
+        "issueType": {
+          "__rl": true,
+          "value": "10002",
+          "mode": "list",
+          "cachedResultName": "Bug"
+        },
+        "summary": "={{$json[\"summary\"]}}",
+        "additionalFields": {
+          "description": "={{$json[\"description\"]}}"
+        }
+      },
+      "type": "n8n-nodes-base.jira",
+      "typeVersion": 1,
+      "position": [
+        32,
+        -48
+      ],
+      "id": "868e5eb9-e6e9-4424-bd4b-41d80285e462",
+      "name": "Create an issue",
+      "credentials": {
+        "jiraSoftwareCloudApi": {
+          "id": "jw5Zs8HX8WeQkOL6",
+          "name": "Jira SW Cloud account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "C0ARBCFB4FR",
+          "mode": "list",
+          "cachedResultName": "test-n8n-bug-create"
+        },
+        "text": "=🚨 New Bug Created!\n\nTitle: {{ $('Code in JavaScript').item.json.summary }}\nSeverity: {{ $('Code in JavaScript').item.json.priority }}\nStatus: Created in Jira\n🔗 Ticket: https://lopsang-gole.atlassian.net/browse/{{ $json.key }}",
+        "otherOptions": {}
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.4,
+      "position": [
+        256,
+        -48
+      ],
+      "id": "a10c1d26-fa81-47ef-9ea0-3b6f92e98ccb",
+      "name": "Send a message",
+      "webhookId": "5ff2dc4b-e0eb-47e3-92cf-35bffb853173",
+      "credentials": {
+        "slackOAuth2Api": {
+          "id": "R6AGU4zZqehHXiF1",
+          "name": "Slack account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "trigger": [
+          "app_mention"
+        ],
+        "channelId": {
+          "__rl": true,
+          "value": "C0ARBCFB4FR",
+          "mode": "list",
+          "cachedResultName": "test-n8n-bug-create"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.slackTrigger",
+      "typeVersion": 1,
+      "position": [
+        -432,
+        -48
+      ],
+      "id": "5ad03f39-bc21-48f2-a3cd-2694cd0eebeb",
+      "name": "Slack Trigger",
+      "webhookId": "1bb67b58-a0dc-4129-9696-2756ea056373",
+      "credentials": {
+        "slackApi": {
+          "id": "SlRqxdVR2Y5HabEs",
+          "name": "Slack account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const rawText = $json.text || \"\";\n\n// Remove Slack mention like <@U123ABC>\nconst cleaned = rawText.replace(/<@[^>]+>\\s*/, \"\").trim();\n\n// Split by pipe\nconst parts = cleaned.split(\"|\").map(p => p.trim());\n\n// Map fields\nconst summary = parts[0] || \"\";\nconst description = parts[1] || \"\";\nconst priorityInput = (parts[2] || \"\").toLowerCase();\n\n// Normalize priority for Jira\nlet priority = \"Medium\";\nif (priorityInput === \"high\") priority = \"High\";\nelse if (priorityInput === \"low\") priority = \"Low\";\nelse if (priorityInput === \"critical\") priority = \"Highest\";\nelse if (priorityInput === \"medium\") priority = \"Medium\";\n\nreturn [\n  {\n    json: {\n      summary,\n      description,\n      priority,\n      original_text: rawText,\n      cleaned_text: cleaned,\n      slack_user: $json.user,\n      slack_channel: $json.channel,\n      slack_ts: $json.ts\n    }\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -224,
+        -48
+      ],
+      "id": "77491525-ce64-4fdd-bfb5-f133e2619e61",
+      "name": "Code in JavaScript"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Create an issue": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Slack Trigger": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Create an issue",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "303d072d-cbf7-41e5-88f2-fd74b65c79f7",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "ea4ff623552614c85f937163afd37b91ccd39175090372db699c5823335a35f6"
+  },
+  "id": "ttPYd2p3xegoPkTD",
+  "tags": []
+}
+
+
