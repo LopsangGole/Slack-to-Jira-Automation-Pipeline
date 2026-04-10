@@ -6,16 +6,15 @@ https://drive.google.com/file/d/1KIcUvY08IRQCaSyIhcGmSYHlk-84Vo5x/view?usp=shari
 
 
 Impact
-⏱ Reduced manual ticket creation effort by ~70%
-📈 Improved consistency in bug reporting
-⚡ Faster communication between QA and developers
-🔄 Streamlined QA workflow
+1. ⏱ Reduced manual ticket creation effort by ~70%
+2. 📈 Improved consistency in bug reporting
+3. ⚡ Faster communication between QA and developers
+4. 🔄 Streamlined QA workflow
 
 
 Project Structure
 /project-root
 
-│
 ├── workflow.json       # Exported n8n workflow
 ├── screenshots/        # Slack, n8n, Jira images
 └── README.md           # Project documentation
@@ -32,8 +31,8 @@ How to Run
 
 
 Future Improvements
-🧠 AI-based bug parsing (title, steps, severity extraction)
-🔁 Duplicate ticket detection
-👤 Auto-assignment based on module
-📎 Screenshot/file attachment support
-🎛 Slack buttons (Create / Cancel ticket)
+1. 🧠 AI-based bug parsing (title, steps, severity extraction)
+2. 🔁 Duplicate ticket detection
+3. 👤 Auto-assignment based on module
+4. 📎 Screenshot/file attachment support
+5. 🎛 Slack buttons (Create / Cancel ticket)
